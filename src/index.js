@@ -4,7 +4,12 @@ import App from './App';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ErrorPage from './components/ErrorPage';
 import Home from './components/Home';
-import Movie from './components/Movie';
+import Movies from './components/Movies';
+import Genres from './components/Genres';
+import AddMovie from './components/EditMovie';
+import ManageCatalogue from './components/ManageCatalogue';
+import Graphql from './components/Graphql';
+import Login from './components/Login';
 
 const router = createBrowserRouter([
   {
@@ -18,12 +23,32 @@ const router = createBrowserRouter([
       },
       {
         path: "/movies",
-        element: <Movie/>
+        element: <Movies/>
+      },
+      {
+        path: "/genres",
+        element: <Genres/>
+      },
+      {
+        path: "/movies/:id/edit",
+        element: <AddMovie/>
+      },
+      {
+        path: "/manage-catalogue",
+        element: <ManageCatalogue/>
+      },
+      {
+        path: "/graphql",
+        element: <Graphql/>
+      },
+      {
+        path: "/login",
+        element: <Login/>
       }
     ]
   }
 ])
-
+// section 6
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

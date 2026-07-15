@@ -1,12 +1,10 @@
-
-const Movie = () => {
+const Login = () => {
     return (
         <div className="text-center">
-            <h2>Movie</h2>
+            <h2>Login</h2>
             <hr/>
         </div>
     );
 }
 
-
-export default Movie;
+export default Login;

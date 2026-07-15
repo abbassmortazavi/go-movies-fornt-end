@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import Ticket from './../images/1.jpeg';
 
 const Home = () => {
@@ -5,7 +6,10 @@ const Home = () => {
         <div className="text-center">
             <h2>Find a movie to watch tonight!</h2>
             <hr/>
-            <img src={Ticket} alt='movie tickets'/>
+            <Link to="/movies" className="btn btn-primary">
+               <img src={Ticket} alt='movie tickets'/>
+            </Link>
+        
         </div>
     ); 
 }

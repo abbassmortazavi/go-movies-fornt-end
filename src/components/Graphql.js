@@ -1,12 +1,12 @@
 
-const Movie = () => {
+const Graphql = () => {
     return (
         <div className="text-center">
-            <h2>Movie</h2>
+            <h2>Graphql</h2>
             <hr/>
         </div>
     );
 }
 
 
-export default Movie;
+export default Graphql;
