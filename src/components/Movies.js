@@ -43,7 +43,7 @@ const Movies = () => {
                 <tbody>
                     {movies.map((movie) => (
                         <tr key={movie.id}>
-                            <td><a href={`/movies/${movie.id}/edit`}>{movie.title}</a></td>
+                            <td><a href={`/movies/${movie.id}`}>{movie.title}</a></td>
                             <td>{movie.release_date}</td>
                             <td>{movie.runtime}</td>
                             <td>{movie.mpa_rating}</td>
