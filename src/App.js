@@ -1,6 +1,9 @@
+import { useState } from "react";
 import { Link, Outlet } from "react-router-dom";
 
 function App() {
+  const [jwtToken, setJwtToken] = useState("");
+
   return (
     <div className="container">
       <div className="row">
@@ -9,11 +12,17 @@ function App() {
         </div>
 
         <div className="col text-end">
-          <Link to="/login">
-            <span className="badge bg-success">Login</span>
-          </Link>
+          {
+            jwtToken === ""
+              ?
+              <Link to="/login">
+                <span className="badge bg-success">Login</span>
+              </Link>
+              : <a href="!#"><span className="badge bg-danger">Logout</span></a>
+          }
+
         </div>
-        <hr className="mb-3"/>
+        <hr className="mb-3" />
       </div>
 
       <div className="row">
@@ -23,14 +32,22 @@ function App() {
               <Link to="/" className="list-group-item list-group-item-action">Home</Link>
               <Link to="/movies" className="list-group-item list-group-item-action">Movies</Link>
               <Link to="/genres" className="list-group-item list-group-item-action">Genres</Link>
-              <Link to="/admin/movie/0" className="list-group-item list-group-item-action">Add Movie</Link>
-              <Link to="/manage-catalogue" className="list-group-item list-group-item-action">Manage Catalogue</Link>
-              <Link to="/graphql" className="list-group-item list-group-item-action">GraphQL</Link>
+              {
+                jwtToken !== "" &&
+                <>
+                  <Link to="/admin/movie/0" className="list-group-item list-group-item-action">Add Movie</Link>
+                  <Link to="/manage-catalogue" className="list-group-item list-group-item-action">Manage Catalogue</Link>
+                  <Link to="/graphql" className="list-group-item list-group-item-action">GraphQL</Link>
+                </>
+              }
+
             </div>
           </nav>
         </div>
         <div className="col-md-10">
-         <Outlet/>
+          <Outlet context={{
+            setJwtToken, jwtToken
+          }}/>
         </div>
       </div>
     </div>
