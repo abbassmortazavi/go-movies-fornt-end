@@ -4,25 +4,22 @@ const Movies = () => {
     const [movies, setMovies] = useState([]);
 
     useEffect(()=>{
-        let moviesList = [
-            {
-                id: 1,
-                title: "new movie",
-                release_date: "2026-01-02",
-                runtime: 20,
-                mpa_rating: "R",
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-            },
-            {
-                id: 2,
-                title: "another movie",
-                release_date: "2026-01-02",
-                runtime: 20,
-                mpa_rating: "R",
-                description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-            }
-        ]
-        setMovies(moviesList);
+        // fetch("http://localhost:8080/api/movies")
+        //     .then((response) => response.json())
+        //     .then((data) => setMovies(data))
+        //     .catch((error) => console.error("Error fetching movies:", error));
+        const headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        const requestOptions = {
+            method: "GET",
+            headers: headers,
+        };
+        fetch("http://localhost:8080/movies", requestOptions)
+            .then((response) => response.json())
+            .then((data) => setMovies(data))
+            .catch((error) => console.error("Error fetching movies:", error));
+
+
     }, [])
 
     return (
