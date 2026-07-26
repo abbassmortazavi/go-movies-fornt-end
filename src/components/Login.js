@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import Input from "./form/Input";
 import { useNavigate, useOutletContext } from "react-router-dom";
 
@@ -15,15 +15,34 @@ const Login = () => {
 
     const handelSubmit = (event) => {
         event.preventDefault();
-        if (email === "jafar@yahoo.com") {
-            setJwtToken("abc");
-            setAlertClassName("d-none");
-            setAlertMessage("");
-            navigate("/");
-        } else {
-            setAlertClassName("alert-danger");
-            setAlertMessage("Invalid crediantioals!");
+        let reqPayload = {
+            email: email,
+            password: password
         }
+        const requestOptions = {
+            method: "post",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify(reqPayload)
+        }
+        fetch(`/authenticate`, requestOptions)
+        .then((res)=>res.json())
+        .then((data)=>{
+            if(data.error){
+                setAlertClassName('alert-danger')
+                setAlertMessage(data.message)
+            }else{
+                setJwtToken(data.access_token)
+                setAlertClassName("d-none")
+                setAlertMessage("")
+                navigate("/")
+            }
+        }).catch(err=>{
+            setAlertClassName("alert-danger")
+            setAlertMessage(err)
+        })
     }
     return (
         <div className="col-md-6 offset-3">

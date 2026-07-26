@@ -1,5 +1,5 @@
-import { use, useState } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import { use, useEffect, useState } from "react";
+import { data, Link, Outlet, useNavigate } from "react-router-dom";
 import Alert from "./components/Alert";
 
 function App() {
@@ -7,10 +7,33 @@ function App() {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertClassName, setAlertClassName] = useState("d-none");
   const navigate = useNavigate();
-    let logout = ()=>{
-        setJwtToken("");
-        navigate("/login");
+  let logout = () => {
+    setJwtToken("");
+    navigate("/login");
+  }
+
+
+
+  useEffect(() => {
+    if (jwtToken === "") {
+      const reqOptions = {
+        method: "GET",
+        crediantials: "include"
+      }
+      fetch(`/refresh-token`, reqOptions)
+        .then((res) => res.json())
+        .then((data => {
+          if (data.access_token) {
+            setJwtToken(data.access_token)
+          }
+        })).catch(error=>{
+          console.log(error);
+        })
     }
+  },[jwtToken])
+
+
+
 
   return (
     <div className="container">
