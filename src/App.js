@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { use, useCallback, useEffect, useState } from "react";
 import { data, Link, Outlet, useNavigate } from "react-router-dom";
 import Alert from "./components/Alert";
 
@@ -7,7 +7,6 @@ function App() {
   const [alertMessage, setAlertMessage] = useState("");
   const [alertClassName, setAlertClassName] = useState("d-none");
 
-  const [ticking, setTicking] = useState(false);
   const [tickInterval, setTickInterval] = useState();
 
 
@@ -25,11 +24,39 @@ function App() {
         console.log("err in logout: ", err);
       }).finally(() => {
         setJwtToken("");
+        toggleRefresh(false);
       })
     navigate("/login");
   }
 
 
+  const toggleRefresh = useCallback((status) => {
+    if (status) {
+      let i = setInterval(() => {
+        console.log("this will run every second");
+        const reqOptions = {
+          method: "GET",
+          crediantials: "include"
+        }
+        fetch(`/refresh-token`, reqOptions)
+          .then((res) => res.json())
+          .then((data => {
+            if (data.access_token) {
+              setJwtToken(data.access_token);
+            }
+          })).catch(error => {
+            console.log(error);
+          })
+      }, 600000)
+      setTickInterval(i)
+      console.log("setting tick interval to ", i);
+    } else {
+      console.log("turning off ticking.");
+      console.log("turning off set interval.", tickInterval);
+      setTickInterval(null)
+      clearInterval(tickInterval)
+    }
+  }, [tickInterval])
 
   useEffect(() => {
     if (jwtToken === "") {
@@ -41,33 +68,14 @@ function App() {
         .then((res) => res.json())
         .then((data => {
           if (data.access_token) {
-            setJwtToken(data.access_token)
+            setJwtToken(data.access_token);
+            toggleRefresh(true);
           }
         })).catch(error => {
           console.log(error);
         })
     }
-  }, [jwtToken])
-
-  const toggleRefresh = () => {
-    console.log("clicker");
-    if (!ticking) {
-      console.log("turning on ticking");
-      let i = setInterval(() => {
-        console.log("this will run every second");
-
-      }, 1000)
-      setTickInterval(i)
-      console.log("setting tick interval to ", i);
-      setTicking(true);
-    } else {
-        console.log("turning off ticking.");
-        console.log("turning off set interval.", tickInterval);
-        setTickInterval(null)
-        clearInterval(tickInterval)
-         setTicking(false);
-    }
-  }
+  }, [jwtToken, toggleRefresh])
 
 
   return (
@@ -111,14 +119,16 @@ function App() {
           </nav>
         </div>
         <div className="col-md-10">
-        <a href="#!" className="btn btn-outline-secondary" onClick={toggleRefresh}>Toggle Ticking</a>
           <Alert
             className={alertClassName}
             message={alertMessage}
           />
           <Outlet context={{
-            setJwtToken, jwtToken,
-            setAlertClassName, setAlertMessage
+            setJwtToken,
+            jwtToken,
+            setAlertClassName,
+            setAlertMessage,
+            toggleRefresh
           }} />
         </div>
       </div>
