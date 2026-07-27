@@ -4,10 +4,6 @@ const Movies = () => {
     const [movies, setMovies] = useState([]);
 
     useEffect(()=>{
-        // fetch("http://localhost:8080/api/movies")
-        //     .then((response) => response.json())
-        //     .then((data) => setMovies(data))
-        //     .catch((error) => console.error("Error fetching movies:", error));
         const headers = new Headers();
         headers.append("Content-Type", "application/json");
         const requestOptions = {
