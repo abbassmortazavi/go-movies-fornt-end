@@ -6,9 +6,26 @@ function App() {
   const [jwtToken, setJwtToken] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
   const [alertClassName, setAlertClassName] = useState("d-none");
+
+  const [ticking, setTicking] = useState(false);
+  const [tickInterval, setTickInterval] = useState();
+
+
   const navigate = useNavigate();
+
+
   let logout = () => {
-    setJwtToken("");
+    let reqOptions = {
+      method: 'GET',
+      credentials: 'include',
+
+    }
+    fetch(`/logout`, reqOptions)
+      .catch(err => {
+        console.log("err in logout: ", err);
+      }).finally(() => {
+        setJwtToken("");
+      })
     navigate("/login");
   }
 
@@ -26,13 +43,31 @@ function App() {
           if (data.access_token) {
             setJwtToken(data.access_token)
           }
-        })).catch(error=>{
+        })).catch(error => {
           console.log(error);
         })
     }
-  },[jwtToken])
+  }, [jwtToken])
 
+  const toggleRefresh = () => {
+    console.log("clicker");
+    if (!ticking) {
+      console.log("turning on ticking");
+      let i = setInterval(() => {
+        console.log("this will run every second");
 
+      }, 1000)
+      setTickInterval(i)
+      console.log("setting tick interval to ", i);
+      setTicking(true);
+    } else {
+        console.log("turning off ticking.");
+        console.log("turning off set interval.", tickInterval);
+        setTickInterval(null)
+        clearInterval(tickInterval)
+         setTicking(false);
+    }
+  }
 
 
   return (
@@ -76,6 +111,7 @@ function App() {
           </nav>
         </div>
         <div className="col-md-10">
+        <a href="#!" className="btn btn-outline-secondary" onClick={toggleRefresh}>Toggle Ticking</a>
           <Alert
             className={alertClassName}
             message={alertMessage}
