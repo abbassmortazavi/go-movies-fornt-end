@@ -1,7 +1,7 @@
 const Textarea = (props) => {
   return (
     <div className="form-group">
-   <label htmlFor={props.name}>{props.label}</label>
+   <label htmlFor={props.name}>{props.title}</label>
       <textarea
         id={props.name}
         name={props.name}
