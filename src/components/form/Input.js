@@ -3,11 +3,12 @@ import { forwardRef } from "react"
 const Input = forwardRef((props, ref) => {
     return (
         <div className="mb-3">
-            <label htmlFor={props.name}>
+            <label className="float-start" htmlFor={props.name}>
                 {props.title}
             </label>
             <input
                 type={props.type}
+                name={props.name}
                 className={props.className}
                 id={props.name}
                 label={props.name}
