@@ -1,7 +1,7 @@
 const Select = (props) => {
   return (
     <div className="form-group">
-      <label htmlFor={props.name}>{props.title}</label>
+      <label className="float-start" htmlFor={props.name}>{props.title}</label>
       <select
         id={props.name}
         name={props.name}
@@ -15,9 +15,9 @@ const Select = (props) => {
           </option>
         ))}
       </select>
-      <div className={props.errorDiv}>
-        {props.errorMsg}
-      </div>
+       <div className={props.errorDiv}>
+                {props.errorMsg}
+        </div>
     </div>
   );
 };
