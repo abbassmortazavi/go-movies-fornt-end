@@ -5,16 +5,35 @@ const Movie = () => {
     const [movie, setMovie] = useState({});
 
     useEffect(()=>{
-        let movieDetails = {
-            id: 1,
-            title: "new movie",
-            release_date: "2026-01-02",
-            runtime: 20,
-            mpa_rating: "R",
-            description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+        const reqOptions = {
+            method: "Get",
+            crediantials: "include"
+
         }
-        setMovie(movieDetails);
+
+        fetch("/movies/"+id, reqOptions)
+        .then((res)=>res.json())
+        .then(data=>{
+            console.log(data);
+            setMovie(data);
+        }).catch(err=>{
+            console.log(err);
+        })
+       
     }, [id])
+
+
+
+    if (movie.genres) {
+        movie.genres = Object.values(movie.genres);
+    }else{
+        movie.genres = [];
+    }
+
+
+
+
+
     return (
         <div className="text-center">
             <h2>Movie: {movie.title}</h2>
@@ -23,6 +42,15 @@ const Movie = () => {
             <p>MPA Rating: {movie.mpa_rating}</p>
             <p>Description: {movie.description}</p>
             <hr/>
+            {movie.genres.map((g)=>(
+                <span key={g. genre} className="badge bg-secondary me-2">{g. genre}</span>
+            ))}
+            <hr/>
+            {movie.image !== "" &&
+                <div className="mb-3">
+                    <img src={`https://picsum.photos/id/${movie.image}/200/300`} alt="poster"/>
+                </div>
+            }
         </div>
     );
 }
