@@ -3,6 +3,7 @@ import { Form, useNavigate, useOutletContext, useParams } from "react-router-dom
 import Input from "./form/Input";
 import Select from "./form/Select";
 import Textarea from "./form/TextArea";
+import Checkbox from "./form/Checkbox";
 const EditMovie = () => {
     const navigate = useNavigate();
     const { jwtToken } = useOutletContext();
@@ -43,14 +44,18 @@ const EditMovie = () => {
         title: "",
         release_date: "",
         description: "",
-        release_date: "",
         runtime: "",
         mpaa_rating: "",
+        genres: [],
+        genres_array: [Array(13).fill(false)]
 
     })
 
     //get id from the url
     let { id } = useParams();
+    if (id === undefined) {
+        id = 0;
+    }
 
     useEffect(() => {
         if (jwtToken === "") {
@@ -58,20 +63,77 @@ const EditMovie = () => {
             return
         }
 
+        if (id === 0) {
+            // add movie
+            setMovie({
+                id: 0,
+                title: "",
+                release_date: "",
+                description: "",
+                runtime: "",
+                mpaa_rating: "",
+                genres: [],
+                genres_array: [Array(13).fill(false)]
+            })
 
-    }, [jwtToken, navigate]);
+
+            const reqOptions = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            }
+            fetch(`/genres`, reqOptions)
+                .then((res) => res.json())
+                .then(data => {
+                    let checks = [];
+                    data.forEach(g => {
+                        checks.push({
+                            id: g.id,
+                            genre: g.genre,
+                            checked: g.checked
+                        })
+                    });
+
+                    setMovie(m => ({
+                        ...movie,
+                        genres: checks,
+                        genres_array: []
+                    }))
+
+                }).catch(err => {
+                    console.log(err);
+                })
+
+        } else {
+            //edit movie
+
+        }
+
+
+    }, [id, jwtToken, navigate]);
     const handelSubmit = (e) => {
         e.preventDefault();
 
     }
 
-    const handelChange = () => (event)=> {
+    const handelChange = () => (event) => {
         let name = event.target.name;
         let value = event.target.value;
         setMovie({
             ...movie,
             [name]: value
         })
+    }
+
+    const handelCheck = (event, position) => {
+        console.log("handelCheck is called");
+        console.log("value in handelCheck: ", event.target.value);
+        console.log("checked is: ", event.target.checked);
+
+
+
+
     }
     return (
         <div className="text-center">
@@ -137,12 +199,33 @@ const EditMovie = () => {
                     id={movie.description}
                     label="Description"
                     name="description"
-                    value= {movie.description}
+                    value={movie.description}
                     rows={3}
                     onChange={handelChange("description")}
                     errorDiv={hasError("description") ? "text-danger" : "d-none"}
                     errorMsg={"please Enter Description"}
                 />
+
+                <hr />
+                <h3>Genres</h3>
+                {movie.genres && movie.genres.length > 1 &&
+
+                    Array.from(movie.genres).map((g, index) => (
+                        <Checkbox
+                            type="checkbox"
+                            title={g.genre}
+                            id={"genre-" + index}
+                            name={"genre"}
+                            checked={movie.genres[index].checked}
+                            onChange={(event) => handelCheck(event, index)}
+                            value={g.id}
+                            key={index}
+                            className="form-check-input"
+
+                        />
+                    ))
+
+                }
 
             </form>
         </div>
