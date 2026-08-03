@@ -115,6 +115,25 @@ const EditMovie = () => {
     const handelSubmit = (e) => {
         e.preventDefault();
 
+        let errors = [];
+        let required = [
+            {field: movie.title, name: "title"},
+            {field: movie.release_date, name: "release_date"},
+            {field: movie.runtime, name: "runtime"},
+            {field: movie.description, name: "description"},
+            {field: movie.mpaa_rating, name: "mpaa_rating"},
+            {field: movie.mpaa_rating, name: "title"},
+        ]
+        required.forEach(function (obj) {
+            if (obj.field === "") {
+                errors.push(obj.name);
+            }
+            
+        })
+        setErrors(errors);
+        if (errors.length > 0) {
+            return false;
+        }
     }
 
     const handelChange = () => (event) => {
@@ -153,9 +172,6 @@ const EditMovie = () => {
             <h2>Add/Edit Movie</h2>
             <hr />
             <form onSubmit={handelSubmit}>
-                <pre>
-                    {JSON.stringify(movie, null, 3)}
-                </pre>
                 <input type="hidden" name="id" value={movie.id} id="id" />
                 <Input
                     title="title"
@@ -166,7 +182,7 @@ const EditMovie = () => {
                     name={"title"}
                     value={movie.title}
                     onChange={handelChange("title")}
-                    errorDiv={hasError("title") ? "text-danger" : "de-none"}
+                    errorDiv={hasError("title") ? "text-danger" : "d-none"}
                     errorMsg="please Enter Title"
                 />
 
@@ -239,6 +255,9 @@ const EditMovie = () => {
                     ))
 
                 }
+
+                <hr/>
+                <button className="btn btn-primary">Submit</button>
 
             </form>
         </div>
